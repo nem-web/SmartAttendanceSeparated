@@ -3,53 +3,41 @@ import { Link } from "react-router-dom";
 
 export default function Dashboard(){
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      <div className="flex gap-6">
-        <div className="card flex-1">
-          <h3 className="text-sm text-[var(--color-muted)]">Total Students</h3>
-          <div className="text-3xl font-semibold mt-2">452</div>
-        </div>
-        <div className="card flex-1">
-          <h3 className="text-sm text-[var(--color-muted)]">Today's Attendance</h3>
-          <div className="text-3xl font-semibold mt-2">388</div>
-        </div>
-        <div className="card flex-1">
-          <h3 className="text-sm text-[var(--color-muted)]">Avg Attendance</h3>
-          <div className="text-3xl font-semibold mt-2">86%</div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-6">
-        <div className="card col-span-2">
-          <h4 className="text-lg font-medium mb-4">Attendance Trend</h4>
-          <div className="h-48 bg-[rgba(0,0,0,0.04)] rounded-lg flex items-center justify-center text-[var(--color-muted)]">[Chart placeholder]</div>
+    <div className="w-full mx-auto space-y-6 bg-[var(--bg-primary)]">
+      {/* upper part */}
+      <div className="main flex items-center justify-around w-full">
+        <div className="left-main">
+          <h2 className="text-4xl">Teacher Dashboard</h2>
+          <span>Overview of today's attendance and upcoming classes</span>
         </div>
 
-        <div className="card">
-          <h4 className="text-lg font-medium mb-4">Students At Risk</h4>
-          <ul className="space-y-3">
-            <li className="flex items-center justify-between">
-              <div>
-                <div className="font-medium">Ravi Kumar</div>
-                <div className="text-sm text-[var(--color-muted)]">Roll: 2101</div>
-              </div>
-              <div className="text-sm text-[var(--color-warning)]">72%</div>
-            </li>
-            <li className="flex items-center justify-between">
-              <div>
-                <div className="font-medium">Asha Patel</div>
-                <div className="text-sm text-[var(--color-muted)]">Roll: 2045</div>
-              </div>
-              <div className="text-sm text-[var(--color-warning)]">71%</div>
-            </li>
-          </ul>
+        <div className="right-main flex items-center justify-center">
+          <a href="/download">Download Report</a>
+          <a href="/start-attendance">Start Attendance</a>
         </div>
+        
       </div>
 
-      <div className="flex gap-3">
-        <Link to="/mark" className="btn-primary">Mark Attendance</Link>
-        <Link to="/students" className="btn-ghost">Student List</Link>
+      {/* cards */}
+      <div className="grid bg-[var(--bg-card)] grid-cols-2">
+          <div className="left-card p-4 flex items-center justify-around w-[60%]">
+            <div className="name">
+              <h3>Good morning, Alex</h3>
+              <p>Monday, Spetember 23 08:45</p>
+              <p>Next Class - Grade 10 A 09:00  Room 203</p>
+            </div>
+            <div className="camera">
+              <p>Face Recognition ready</p>
+              <a href="/attendance-start">Start Attendance session</a>
+              <p>Camera and permission checked</p>
+            </div>
+          </div>
+          <div className="right-card p-4 items-center w-[40%]">
+            <h3>Attendance Trends</h3>
+          </div>
       </div>
+
+      
     </div>
   );
 }
