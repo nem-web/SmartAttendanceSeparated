@@ -12,8 +12,9 @@ import {
   AlertCircle,
   User
 } from "lucide-react";
-
+import { useNavigate } from "react-router-dom";
 export default function MarkAttendance() {
+  const navigate = useNavigate();
   const webcamRef = useRef(null);
   const [snap, setSnap] = useState(null);
   const [status, setStatus] = useState("Idle");
@@ -62,9 +63,9 @@ export default function MarkAttendance() {
               <Clock size={16} />
               <span>09:00 - 10:00</span>
             </div>
-            <button className="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded-lg hover:bg-gray-50 bg-white transition">
+            <button className="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded-lg hover:bg-gray-50 bg-white transition cursor-pointer">
               <Settings size={16} />
-              <span>Session settings</span>
+              <span className="session-settings" onClick={()=>navigate("/settings")}>Session settings</span>
             </button>
           </div>
         </div>
@@ -143,12 +144,12 @@ export default function MarkAttendance() {
                    <button className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition backdrop-blur-md">
                      <Grid size={20} />
                    </button>
-                   <button 
+                   {/* <button 
                      onClick={capture}
                      className="p-3 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-xl shadow-lg hover:scale-105 transition active:scale-95"
                    >
                      <Play size={24} fill="currentColor" />
-                   </button>
+                   </button> */}
                 </div>
               </div>
             </div>
