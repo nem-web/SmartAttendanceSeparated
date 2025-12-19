@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import Webcam from "react-webcam";
 import { 
   Settings, 
@@ -13,6 +13,8 @@ import {
   User
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { fetchMySubjects, fetchSubjectStudents } from "../api/teacher";
+
 export default function MarkAttendance() {
   const navigate = useNavigate();
   const webcamRef = useRef(null);
@@ -20,6 +22,24 @@ export default function MarkAttendance() {
   const [status, setStatus] = useState("Idle");
   const [activeTab, setActiveTab] = useState("Present");
   const [isSessionActive, setIsSessionActive] = useState(true);
+
+  const [subjects, setSubjects] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [students, setStudents] = useState([]);
+
+  // Simulating the fetch call you had
+  useEffect(() => {
+    fetchMySubjects().then(setSubjects);
+  }, []);
+
+  useEffect(() => {
+    if(!selectedSubject) return;
+    fetchSubjectStudents(selectedSubject).then(setStudents);
+  }, [selectedSubject])
+
+  const verifiedStudents = students.filter(
+    (s) => s.verified === true
+  );
 
   // --- Existing Functionalities ---
   const capture = useCallback(() => {
@@ -74,10 +94,18 @@ export default function MarkAttendance() {
         <div className="flex flex-col sm:flex-row gap-4 items-center">
           <div className="flex flex-col gap-1 w-full sm:w-64">
             <label className="text-xs font-semibold text-[var(--text-body)] uppercase tracking-wide">Class</label>
-            <select className="w-full p-2.5 bg-white border border-gray-200 rounded-lg text-[var(--text-main)] focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer">
-              <option>CSE 3A • Data Structures</option>
-              <option>CSE 3B • Algorithms</option>
-            </select>
+            <select
+                value={selectedSubject || ""}
+                onChange={(e) => setSelectedSubject(e.target.value)}
+                className="flex items-center gap-1 text-sm font-medium text-gray-600 px-3 py-1.5 hover:bg-gray-100 rounded-lg whitespace-nowrap cursor-pointer"
+              >
+                <option disabled value="">Select subject</option>
+                {subjects.map(s => (
+                  <option key={s._id} value={s._id}>
+                    {s.name} ({s.code})
+                  </option>
+                ))}
+              </select>
           </div>
           <div className="flex flex-col gap-1 w-full sm:w-48">
             <label className="text-xs font-semibold text-[var(--text-body)] uppercase tracking-wide">Date</label>

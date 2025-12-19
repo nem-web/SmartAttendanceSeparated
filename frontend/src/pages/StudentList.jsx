@@ -21,7 +21,7 @@ export default function StudentList() {
   const navigate = useNavigate();
 
   // Simulating the fetch call you had
- useEffect(() => {
+  useEffect(() => {
     fetchMySubjects().then(setSubjects);
   }, []);
 
