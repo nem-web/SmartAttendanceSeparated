@@ -30,3 +30,17 @@ SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
 SMTP_USER = os.getenv("SMTP_USER")
 SMTP_PASS = os.getenv("SMTP_PASS")
 BACKEND_BASE_URL = os.getenv("BACKEND_BASE_URL")
+
+# ML Service Configuration
+ML_SERVICE_URL = os.getenv("ML_SERVICE_URL", "http://localhost:8001")
+ML_SERVICE_TIMEOUT = float(os.getenv("ML_SERVICE_TIMEOUT", "30"))
+ML_SERVICE_MAX_RETRIES = int(os.getenv("ML_SERVICE_MAX_RETRIES", "3"))
+
+# ML Thresholds
+ML_CONFIDENT_THRESHOLD = float(os.getenv("ML_CONFIDENT_THRESHOLD", "0.50"))
+ML_UNCERTAIN_THRESHOLD = float(os.getenv("ML_UNCERTAIN_THRESHOLD", "0.60"))
+
+CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME")
+CLOUDINARY_API_KEY = os.getenv("CLOUDINARY_API_KEY")
+CLOUDINARY_API_SECRET = os.getenv("CLOUDINARY_API_SECRET")
+

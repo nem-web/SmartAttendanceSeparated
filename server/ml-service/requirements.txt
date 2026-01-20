@@ -1,0 +1,14 @@
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+
+pydantic==2.10.3
+pydantic-settings==2.10.1
+
+python-multipart
+python-dotenv
+
+# ML dependencies
+face-recognition==1.3.0
+opencv-python-headless
+numpy==1.26.4
+pillow==11.0.0
