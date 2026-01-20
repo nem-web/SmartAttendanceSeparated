@@ -2,6 +2,8 @@
 
 This directory contains the separated microservices architecture for the Smart Attendance System.
 
+> **✅ Separation Verified**: See [SEPARATION_VERIFICATION.md](./SEPARATION_VERIFICATION.md) for complete verification details and running instructions.
+
 ## Architecture
 
 The system is split into two independent services:
@@ -391,8 +393,10 @@ See main repository LICENSE
 - Documentation: See service READMEs
 - Issues: GitHub Issues
 - Deployment: See DEPLOYMENT_GUIDE.md
+- **Separation Verification**: See [SEPARATION_VERIFICATION.md](./SEPARATION_VERIFICATION.md)
 
 ---
 
 **Version**: 1.0  
-**Last Updated**: 2024-01-20
+**Last Updated**: 2026-01-20  
+**Separation Status**: ✅ Verified
