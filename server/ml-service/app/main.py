@@ -62,7 +62,7 @@ async def health():
     try:
         import face_recognition
         import numpy as np
-    except:
+    except ImportError:
         models_loaded = False
     
     return HealthResponse(

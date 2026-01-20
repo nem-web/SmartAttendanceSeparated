@@ -22,9 +22,6 @@ from app.schemas.responses import (
     DistanceInfo,
     BatchMatchResult
 )
-from app.ml.face_encoder import get_face_embedding
-from app.ml.face_detector import detect_faces_and_embeddings
-from app.ml.face_matcher import match_embedding
 from app.core.constants import (
     ERROR_NO_FACE,
     ERROR_MULTIPLE_FACES,
