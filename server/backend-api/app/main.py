@@ -18,6 +18,7 @@ from .api.routes.attendance import router as attendance_router
 
 from app.api.routes import teacher_settings as settings_router
 from app.core.cloudinary_config import cloudinary
+from app.services.ml_client import ml_client
 
 
 
