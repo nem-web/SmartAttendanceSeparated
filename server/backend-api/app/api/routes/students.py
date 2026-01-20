@@ -10,7 +10,7 @@ from app.services.students import get_student_profile
 
 from cloudinary.uploader import upload
 import base64
-from app.utils.face_encode import get_face_embedding
+from app.services.ml_client import ml_client
 
 
 router = APIRouter(prefix="/students", tags=["students"])
@@ -65,15 +65,32 @@ async def upload_image_url(
     # 1. Read image bytes
     image_bytes = await file.read()
     
-    # 2. Generate face embeddings
+    # 2. Convert to base64 for ML service
+    image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+    
+    # 3. Generate face embeddings via ML service
     try:
-        embedding = get_face_embedding(image_bytes)
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        ml_response = await ml_client.encode_face(
+            image_base64=image_base64,
+            validate_single=True,
+            min_face_area_ratio=0.05,
+            num_jitters=5
+        )
+        
+        if not ml_response.get("success"):
+            raise HTTPException(
+                status_code=400,
+                detail=f"Face encoding failed: {ml_response.get('error', 'Unknown error')}"
+            )
+        
+        embedding = ml_response.get("embedding")
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"ML service error: {str(e)}")
     
-    # print("image details ",image_bytes, embedding)
-    
-    
+    # 4. Upload image to Cloudinary
     upload_result = upload(
         image_bytes,
         folder = "student_faces",
@@ -84,7 +101,7 @@ async def upload_image_url(
 
     image_url = upload_result.get("secure_url")
 
-    # 3. Store image_url + embeddings
+    # 5. Store image_url + embeddings
     await db.students.update_one(
         {"userId": student_user_id},
         {
