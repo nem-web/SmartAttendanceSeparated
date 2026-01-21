@@ -1,0 +1,31 @@
+services:
+  # ML Service Only - Standalone Configuration
+  ml-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ml-service-standalone
+    ports:
+      - "8001:8001"
+    environment:
+      - LOG_LEVEL=info
+      - HOST=0.0.0.0
+      - PORT=8001
+      - ML_MODEL=hog
+      - NUM_JITTERS=5
+      - MIN_FACE_AREA_RATIO=0.04
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
+    restart: unless-stopped
