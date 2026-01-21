@@ -33,8 +33,5 @@ Thumbs.db
 .env
 .env.local
 
-# Documentation
-README.md
-
 # Logs
 *.log

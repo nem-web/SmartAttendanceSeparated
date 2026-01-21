@@ -491,12 +491,78 @@ gunzip -c ml-service-latest.tar.gz | docker load
 
 ## Security Considerations
 
-1. **Network Isolation**: Run in private network when possible
-2. **Firewall Rules**: Restrict access to port 8001
-3. **No Authentication**: This service has no built-in auth (handled by backend API)
-4. **Resource Limits**: Always set memory and CPU limits
-5. **Read-only Filesystem**: Consider using `--read-only` flag
-6. **Non-root User**: The container runs as root by default, consider adding non-root user
+**IMPORTANT: This service has NO built-in authentication. It is designed to be accessed only by the backend API service.**
+
+### Production Security Requirements
+
+1. **Network Isolation**: 
+   - Run in a private network (Docker network, VPC, etc.)
+   - Never expose port 8001 directly to the public internet
+   - Use Docker network for service-to-service communication
+
+2. **Firewall Rules**: 
+   - Restrict access to port 8001 to only the backend API service IP
+   - Use iptables or cloud provider security groups
+   ```bash
+   # Example: Allow only backend API container
+   iptables -A INPUT -p tcp --dport 8001 -s backend-api-ip -j ACCEPT
+   iptables -A INPUT -p tcp --dport 8001 -j DROP
+   ```
+
+3. **Reverse Proxy Authentication**:
+   - Use Nginx or Traefik with authentication in front of ml-service
+   - Example Nginx configuration:
+   ```nginx
+   location /ml/ {
+       auth_request /auth;
+       proxy_pass http://ml-service:8001/;
+   }
+   ```
+
+4. **Docker Network Isolation**:
+   ```bash
+   # Create isolated network
+   docker network create --internal ml-network
+   
+   # Run ml-service on isolated network
+   docker run -d --network ml-network ml-service:latest
+   ```
+
+5. **Resource Limits**: Always set memory and CPU limits to prevent DoS
+
+6. **Read-only Filesystem**: Consider using `--read-only` flag for additional security
+
+7. **Non-root User**: The container runs as root by default. For production, consider adding a non-root user:
+   ```dockerfile
+   RUN useradd -m -u 1000 mluser
+   USER mluser
+   ```
+
+### Recommended Production Setup
+
+```bash
+# 1. Create secure network
+docker network create --internal ml-secure-network
+
+# 2. Run ml-service on secure network only
+docker run -d \
+  --name ml-service \
+  --network ml-secure-network \
+  --memory=2g \
+  --cpus=2 \
+  --restart=always \
+  ml-service:latest
+
+# 3. Run backend-api with access to ml-service
+docker run -d \
+  --name backend-api \
+  --network ml-secure-network \
+  -p 8000:8000 \
+  -e ML_SERVICE_URL=http://ml-service:8001 \
+  backend-api:latest
+```
+
+Only the backend-api is exposed to external traffic, ml-service remains internal.
 
 ## Support
 
